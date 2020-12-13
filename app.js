@@ -4,6 +4,7 @@ const path = require('path');
 const ejsMate = require('ejs-mate');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const flash = require('connect-flash');
 const session = require('express-session');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
@@ -70,6 +71,7 @@ const sessionConfig = {
 }
 
 app.use(session(sessionConfig));
+app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -80,8 +82,8 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
     res.locals.currentUser = req.user;
-    // res.locals.success = req.flash('success');
-    // res.locals.error = req.flash('error');
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
     next();
 })
 
